@@ -106,12 +106,12 @@ class TestPolicy(TestCase):
         c = collections.Counter(policy.sample_n(first['state'], n=n_samples))
 
         for a, p in zip(first['actions'], first['p']):
-            self.assertAlmostEqual(c[a] / n_samples, p, delta=0.05)
+            self.assertAlmostEqual(float(c[a]) / float(n_samples), p, delta=0.05)
 
         c = collections.Counter(policy.sample_n(second['state'], n=n_samples))
 
         for a, p in zip(second['actions'], second['p']):
-            self.assertAlmostEqual(c[a] / n_samples, p, delta=0.05)
+            self.assertAlmostEqual(float(c[a]) / float(n_samples), p, delta=0.05)
 
     def test_add_actions_with_no_probability_gives_uniform_distribution(self):
         policy = Policy()
@@ -126,7 +126,7 @@ class TestPolicy(TestCase):
 
         for a in values['actions']:
             expected = 1.0 / len(values['actions'])
-            actual = c[a] / n_samples
+            actual = float(c[a]) / float(n_samples)
             self.assertAlmostEqual(expected, actual, delta=0.05)
 
 
@@ -158,8 +158,8 @@ class TestCalculateReturn(TestCase):
 
 class TestGenerateEpisode(TestCase):
     def setUp(self):
-        self.actions = [Action(n) for n in range(4)]
-        self.states = [State(n) for n in range(100)]
+        self.actions = [Action(n) for n in range(2)]
+        self.states = [State(n) for n in range(10)]
 
     def test_generate_episode(self):
         start_state = choice(self.states)
@@ -173,7 +173,7 @@ class TestGenerateEpisode(TestCase):
 
         first = last = next(episode, '')
         for last in episode:
-            print(last)
+            pass
 
         self.assertEqual(first[0], start_state, msg='Initial transition does not start with start state!')
         self.assertEqual(last[3], term_state, msg='Final transition does not end with terminal state!')
